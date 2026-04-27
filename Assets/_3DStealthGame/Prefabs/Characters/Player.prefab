@@ -148,7 +148,24 @@ MonoBehaviour:
       m_Action: Move
       m_Flags: 8
     m_Flags: 0
-  walkSpeed: 1
+  Space:
+    m_Name: Space
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 2e1658f9-394c-48fa-ad23-849ef3f90cda
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: c17cae8d-ea8f-4b78-8a58-d5db09feb5a7
+      m_Path: <Keyboard>/space
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Space
+      m_Flags: 0
+    m_Flags: 0
+  walkSpeed: 1.33333
   turnSpeed: 20
 --- !u!95 &1266932887933045088
 Animator:
