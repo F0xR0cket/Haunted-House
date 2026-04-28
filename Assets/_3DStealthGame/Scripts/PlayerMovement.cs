@@ -6,18 +6,25 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     Animator m_Animator;
-    public InputAction MoveAction;
+    
     AudioSource m_AudioSource;
+
+    public InputAction MoveAction;
+
     private List<string> m_OwnedKeys = new List<string>();
 
     public float walkSpeed = 1.33333f;
     public float turnSpeed = 20f;
 
     public GameObject ScaredUI;
+    public GameObject SprintUI;
 
     private bool IsScared = false;
+    private bool canSprint = true;
+
     private int HowScared = 0;
     //private int anxiety = 0;
+
     Rigidbody m_Rigidbody;
     Vector3 m_Movement;
     Quaternion m_Rotation = Quaternion.identity;
@@ -34,16 +41,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Panic()
     {
-        if (Random.Range(0, 5) == 5);
-        {
-            HowScared = Random.Range(0, 5);
-        }
+        HowScared = Random.Range(0, 5);
     }
 
     private void Update()
     {
-     
-
         if (HowScared > 0)
         {
             IsScared = true;
@@ -70,7 +72,63 @@ public class PlayerMovement : MonoBehaviour
             MoveAction.Enable();
             ScaredUI.SetActive(false);
         }
+
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            if (canSprint)
+            {
+                //StartCoroutine(StopCountdown());
+                StartCoroutine(Sprint());
+            }
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            StopCoroutine(Sprint());
+            StartCoroutine(SprintCooldown());
+        }
+
     }
+
+
+    IEnumerator Sprint()
+    {
+        walkSpeed = 3f;
+
+        /*for (float timer = 2.8f; timer >= 0; timer -= Time.deltaTime)
+        {
+            if (Input.GetKeyUp(KeyCode.LeftShift))
+            {
+                StartCoroutine(SprintCooldown());
+                yield break;
+            }
+        }*/
+
+        float sprintTime = 2.8f;
+        yield return new WaitForSeconds(sprintTime);
+        canSprint = false;
+        StartCoroutine(SprintCooldown());
+        //StartCoroutine(Sprint());
+    }
+
+    IEnumerator SprintCooldown()
+    {
+        canSprint = false;
+        SprintUI.SetActive(false);
+        walkSpeed = 1.33333f;
+        float sprintCooldown = 3.2f;
+        yield return new WaitForSeconds(sprintCooldown);
+        canSprint = true;
+        SprintUI.SetActive(true);
+    }
+
+    /*void StopWait()
+    {
+
+    }*/
+
+
+
 
     void FixedUpdate()
     {
@@ -111,6 +169,9 @@ public class PlayerMovement : MonoBehaviour
             m_AudioSource.Stop();
         }
     }
+
+
+
 
     public void AddKey(string keyName)
     {
